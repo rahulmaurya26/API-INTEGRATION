@@ -88,7 +88,7 @@ Optimized layout for mobile, tablet, and desktop devices.
 
 # Weather Fetch Result
 
-
+![Image](https://github.com/user-attachments/assets/5a2e6c0c-5a35-4742-9dc0-7647c9fef66f)
 
 # News Fetch Result
 
