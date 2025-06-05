@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weather & News App</title>
+  <style>
+    /* Basic body styles and background image */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1501973801540-537f08ccae7b?auto=format&fit=crop&w=1400&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
+
+    /* Semi-transparent overlay to improve readability */
+    .overlay {
+      background: rgba(0, 0, 0, 0.65);
+      min-height: 100vh;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Heading styles */
+    h1 {
+      margin-bottom: 30px;
+      font-size: 32px;
+      color: #ffb347;
+    }
+
+    /* Input box styles */
+    input {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      width: 300px;
+      max-width: 90vw;
+      margin-bottom: 15px;
+    }
+
+    /* Button styles */
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #ff7e5f;
+      color: white;
+      cursor: pointer;
+      margin-bottom: 30px;
+    }
+
+    /* Button hover effect */
+    button:hover {
+      background-color: #ff4e2e;
+    }
+
+    /* Result container (weather + news) */
+    .results {
+      display: flex;
+      gap: 30px;
+      width: 90vw;
+      max-width: 900px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    /* Individual weather/news section styling */
+    .weather, .news {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 16px;
+      flex: 1 1 400px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      overflow-y: auto;
+      max-height: 500px;
+    }
+
+    /* Weather icon size */
+    .weather img {
+      width: 80px;
+      display: block;
+      margin: 0 auto 10px;
+    }
+
+    /* News section heading */
+    .news h2 {
+      margin-top: 0;
+      color: #ffd580;
+      text-align: center;
+    }
+
+    /* Individual news article styles */
+    .news-article {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #fff3cd;
+      padding-bottom: 10px;
+    }
+
+    .news-article:last-child {
+      border-bottom: none;
+    }
+
+    .news-article img {
+      width: 100%;
+      max-height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .news-article a {
+      color: #ffb347;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .news-article a:hover {
+      text-decoration: underline;
+    }
+
+    .news-article p {
+      margin: 5px 0 0 0;
+    }
+
+    /* Responsive design for smaller screens */
+    @media (max-width: 900px) {
+      .results {
+        flex-direction: column;
+        align-items: center;
+      }
+      .weather, .news {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <!-- Page title -->
+    <h1>🌤 Weather & News Finder</h1>
+
+    <!-- Input field to enter city name -->
+    <input type="text" id="cityInput" placeholder="Enter city name..." />
+
+    <!-- Button to trigger fetch -->
+    <button onclick="getWeatherAndNews()">Search</button>
+
+    <!-- Display section for results -->
+    <div class="results">
+      <div class="weather" id="weatherDisplay"></div>
+      <div class="news" id="newsDisplay">
+        <h2>News</h2>
+        <div id="newsArticles"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Main function to fetch weather and news
+  async function getWeatherAndNews() {
+    const city = document.getElementById('cityInput').value.trim();
+    if (!city) {
+      alert('Please enter a city name.');
+      return;
+    }
+
+    const weatherDisplay = document.getElementById('weatherDisplay');
+    const newsDisplay = document.getElementById('newsArticles');
+    weatherDisplay.innerHTML = 'Loading weather...';
+    newsDisplay.innerHTML = 'Loading news...';
+
+    // Weather API key (WeatherAPI)
+    const weatherApiKey = '62f0f0033f8f4d46949131033251504';
+
+    // News API key (GNews - must be activated first)
+    const newsApiKey = 'f2d001c75be5438752f2504fb6588e2d';
+
+    try {
+      // Fetch weather data
+      const weatherResponse = await fetch(`http://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${encodeURIComponent(city)}`);
+      const weatherData = await weatherResponse.json();
+
+      // Handle weather API error
+      if (weatherData.error) {
+        weatherDisplay.innerHTML = `<p style="color: #ff4d4d;">❌ ${weatherData.error.message}</p>`;
+        newsDisplay.innerHTML = '';
+        return;
+      }
+
+      // Create weather display HTML
+      const wHTML = `
+        <h2>Weather in ${weatherData.location.name}, ${weatherData.location.country}</h2>
+        <img src="https:${weatherData.current.condition.icon}" alt="Weather icon" />
+        <p><strong>Temperature:</strong> ${weatherData.current.temp_c} °C</p>
+        <p><strong>Condition:</strong> ${weatherData.current.condition.text}</p>
+        <p><strong>Humidity:</strong> ${weatherData.current.humidity}%</p>
+        <p><strong>Wind Speed:</strong> ${weatherData.current.wind_kph} km/h</p>
+      `;
+      weatherDisplay.innerHTML = wHTML;
+
+      // Get country code for news API
+      const countryCodeISO = await getCountryCodeISO(weatherData.location.country);
+      if (!countryCodeISO) {
+        newsDisplay.innerHTML = '<p>No news available for this location.</p>';
+        return;
+      }
+
+      // Fetch news headlines
+      const newsResponse = await fetch(`https://gnews.io/api/v4/top-headlines?lang=en&country=${countryCodeISO}&max=5&token=${newsApiKey}`);
+      const newsData = await newsResponse.json();
+
+      // Handle case if no news found
+      if (!newsData.articles || newsData.articles.length === 0) {
+        newsDisplay.innerHTML = '<p>No recent news found.</p>';
+        return;
+      }
+
+      // Create news articles HTML
+      let newsHTML = '';
+      newsData.articles.forEach(article => {
+        newsHTML += `
+          <div class="news-article">
+            <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+              <h3>${article.title}</h3>
+            </a>
+            ${article.image ? `<img src="${article.image}" alt="Article image" />` : ''}
+            <p>${article.description || ''}</p>
+          </div>
+        `;
+      });
+
+      newsDisplay.innerHTML = newsHTML;
+
+    } catch (error) {
+      weatherDisplay.innerHTML = '<p style="color: #ff4d4d;">⚠️ Error fetching data.</p>';
+      newsDisplay.innerHTML = '';
+      console.error(error);
+    }
+  }
+
+  // Helper function to map full country name to ISO code
+  async function getCountryCodeISO(countryName) {
+    const countryMap = {
+      'United States of America': 'us',
+      'India': 'in',
+      'United Kingdom': 'gb',
+      'Canada': 'ca',
+      'Australia': 'au',
+      'France': 'fr',
+      'Germany': 'de',
+      'Japan': 'jp',
+      'China': 'cn',
+      'Russia': 'ru',
+      'Brazil': 'br',
+      'Mexico': 'mx',
+      'South Africa': 'za',
+      'Italy': 'it',
+      'Spain': 'es',
+      'Netherlands': 'nl',
+      'Sweden': 'se',
+      'New Zealand': 'nz',
+    };
+
+    // Return ISO code from the map
+    if (countryMap[countryName]) return countryMap[countryName];
+
+    // Try to match country ignoring case
+    const found = Object.entries(countryMap).find(([key]) => key.toLowerCase() === countryName.toLowerCase());
+    return found ? found[1] : null;
+  }
+</script>
+</body>
+</html>
