@@ -92,6 +92,7 @@ Optimized layout for mobile, tablet, and desktop devices.
 
 # News Fetch Result
 
+![Image](https://github.com/user-attachments/assets/879cf423-1e51-4fdd-9efd-58978f133674)
 
 
 
