@@ -54,6 +54,24 @@ MENTOR : NEELA SANTHOSH KUMAR
 
 --- Provides: news title, image, description, and article link by country.
 
+### Key Features:
+#### 🔎 City-Based Search
+Enter any city name to fetch its live weather conditions and related national news.
+
+#### ☀️ Real-Time Weather Info
+Displays temperature, humidity, condition (sunny, cloudy, etc.), and wind speed with an icon.
+
+#### 📰 Live News Headlines
+Shows top 5 news articles (title, image, and short description) from that country.
+
+### 💡 Auto Country Mapping
+Automatically maps the searched city’s country to a valid ISO code for news API usage.
+
+#### 📱 Fully Responsive UI
+Optimized layout for mobile, tablet, and desktop devices.
+
+
+
 
 
 
