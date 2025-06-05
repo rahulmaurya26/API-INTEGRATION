@@ -44,7 +44,7 @@ MENTOR : NEELA SANTHOSH KUMAR
 ## APIs Used:
 ### 1. WeatherAPI
 
---- Endpoint: /v1/current.json
+---Endpoint: /v1/current.json
 
 --- Provides: temperature, condition, wind speed, humidity, weather icons, etc.
 
