@@ -82,7 +82,15 @@ Optimized layout for mobile, tablet, and desktop devices.
 
   Both weather and news are displayed side-by-side in a clean layout.
 
+# Outputs
 
+![Image](https://github.com/user-attachments/assets/83e58f12-2021-4326-8b11-3645d1d65d5d)
+
+# Weather Fetch Result
+
+
+
+# News Fetch Result
 
 
 
