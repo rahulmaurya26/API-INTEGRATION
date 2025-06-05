@@ -54,14 +54,14 @@ MENTOR : NEELA SANTHOSH KUMAR
 
 --- Provides: news title, image, description, and article link by country.
 
-### Key Features:
-#### 🔎 City-Based Search
+## Key Features:
+### 🔎 City-Based Search
 Enter any city name to fetch its live weather conditions and related national news.
 
-#### ☀️ Real-Time Weather Info
+### ☀️ Real-Time Weather Info
 Displays temperature, humidity, condition (sunny, cloudy, etc.), and wind speed with an icon.
 
-#### 📰 Live News Headlines
+### 📰 Live News Headlines
 Shows top 5 news articles (title, image, and short description) from that country.
 
 ### 💡 Auto Country Mapping
@@ -71,7 +71,7 @@ Automatically maps the searched city’s country to a valid ISO code for news AP
 Optimized layout for mobile, tablet, and desktop devices.
 
 
-#### How It Works:
+## How It Works:
   User enters a city name.
 
   WeatherAPI is called to fetch weather details.
