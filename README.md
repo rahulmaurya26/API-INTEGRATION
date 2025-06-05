@@ -71,6 +71,18 @@ Automatically maps the searched city’s country to a valid ISO code for news AP
 Optimized layout for mobile, tablet, and desktop devices.
 
 
+#### How It Works:
+  User enters a city name.
+
+  WeatherAPI is called to fetch weather details.
+
+  The country name from weather data is used to find the ISO country code.
+
+  GNews API is called using that country code to fetch top headlines.
+
+  Both weather and news are displayed side-by-side in a clean layout.
+
+
 
 
 
